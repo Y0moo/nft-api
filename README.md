@@ -98,7 +98,7 @@ const NFTs = await Moralis.Web3API.token.searchNFTs(options);
 #### CURL
 ```bash
 curl -X 'GET' \
-  'https://deep-index.moralis.io/api/v2/nft/search?chain=eth&format=decimal&q=sdsdsdsdsd&filter=name' \
+  'https://deep-index.moralis.io/api/v2/nft/search?chain=eth&format=decimal&q=TEXT&filter=name' \
   -H 'accept: application/json'
   -H 'X-API-Key: YOUR_API_KEY'
 ```
@@ -124,8 +124,8 @@ curl -X 'GET' \
 NFT API gets all NFTs from the current user or address. Supports both ERC721 and ERC1155. Returns an object with the number of NFT objects and the array of NFT objects.
 
 **Options**:
+- `address` *(required)*: A user address (i.e. 0x1a2b3x...).
 - `chain` *(optional)*: The blockchain to get data from. Valid values are listed on the intro page in the [`Supported Blockchains`](#supported-blockchains). Default value Eth.
-- `address` *(optional)*: A user address (i.e. 0x1a2b3x...).
 - `format` *(optional)*: The format of the token id. Available values : decimal, hex. Default value : decimal.
 - `offset` *(optional)*: offset.
 - `limit` *(optional)*: limit.
@@ -165,10 +165,11 @@ curl -X 'GET' \
 ```
 
 
-### `GetNFTsForContrac
+### `GetNFTsForContract
 NFT API gets an object with the NFT count for the specified contract and an NFT array belonging to the given address for the specified contract (asynchronous).
 
 **Options**:
+- `address` *(required)*: Address of the contract.
 - `chain` *(optional)*: The blockchain to get data from. Valid values are listed on the intro page in the [`Supported Blockchains`](#supported-blockchains). Default value Eth.
 - `format` *(optional)*: The format of the token id. Available values : decimal, hex. Default value : decimal.
 - `offset` *(optional)*: offset.
@@ -176,42 +177,80 @@ NFT API gets an object with the NFT count for the specified contract and an NFT 
 
 #### Moralis SDK
 ```js
-
+const options = { chain: 'matic', address: '0x...', token_address: '0x...' };
+const polygonNFTs = await Moralis.Web3API.account.getNFTsForContract(options);
 ```
 
 #### CURL
 ```bash
-
+curl -X 'GET' \
+  'https://deep-index.moralis.io/api/v2/nft/0xaddress?chain=eth&format=decimal' \
+  -H 'accept: application/json'
   -H 'X-API-Key: YOUR_API_KEY'
 ```
 
 **Example return** (Object)
 ```json
-
+[
+  {
+    "token_address": "0x057Ec652A4F150f7FF94f089A38008f49a0DF88e",
+    "token_id": "15",
+    "contract_type": "ERC721",
+    "owner_of": "0x057Ec652A4F150f7FF94f089A38008f49a0DF88e",
+    "block_number": "88256",
+    "block_number_minted": "88256",
+    "token_uri": "string",
+    "metadata": "string",
+    "synced_at": "string",
+    "amount": "1",
+    "name": "CryptoKitties",
+    "symbol": "RARI"
+  }
+]
 ```
 
 
 ### `GetNFTTransfers`
+NFT API gets the NFT transfers. Returns an object with the number of NFT transfers and the array of NFT transfers.
+
 **Options**:
+- `address` *(required)*: A user address (i.e. 0x1a2b3x...).
 - `chain` *(optional)*: The blockchain to get data from. Valid values are listed on the intro page in the [`Supported Blockchains`](#supported-blockchains). Default value Eth.
 - `format` *(optional)*: The format of the token id. Available values : decimal, hex. Default value : decimal.
 - `offset` *(optional)*: offset.
 - `limit` *(optional)*: limit.
+- `direction` *(optional)*: The transfer direction. Available values : both, to, from . Default value : both.
+- `order` *(optional)*: The field(s) to order on and if it should be ordered in ascending or descending order.
 
 #### Moralis SDK
 ```js
-
+const options = { chain: "bsc", address: "0x...", limit: "10" };
+const transfersNFT = await Moralis.Web3API.account.getNFTTransfers(options);
 ```
 
 #### CURL
 ```bash
-
+curl -X 'GET' \
+  'https://deep-index.moralis.io/api/v2/nft/0xaddress/transfers?chain=eth&format=decimal' \
+  -H 'accept: application/json' \
   -H 'X-API-Key: YOUR_API_KEY'
 ```
 
 **Example return** (Object)
 ```json
-
+[
+  {
+    "address": "0x2d30ca6f024dbc1307ac8a1a44ca27de6f797ec22ef20627a1307243b0ab7d09",
+    "name": "Kylin Network",
+    "symbol": "KYL",
+    "decimals": "18",
+    "logo": "https://cdn.moralis.io/eth/0x67b6d479c7bb412c54e03dca8e1bc6740ce6b99c.png",
+    "logo_hash": "ee7aa2cdf100649a3521a082116258e862e6971261a39b5cd4e4354fcccbc54d",
+    "thumbnail": "https://cdn.moralis.io/eth/0x67b6d479c7bb412c54e03dca8e1bc6740ce6b99c_thumb.png",
+    "block_number": "string",
+    "validated": "string"
+  }
+]
 ```
 
 
