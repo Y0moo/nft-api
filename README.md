@@ -95,6 +95,11 @@ const options = { q: "Pancake", chain: "bsc", filter: "name" };
 const NFTs = await Moralis.Web3API.token.searchNFTs(options);
 ```
 
+#### REST
+```bash
+GET /nft/search
+```
+
 #### CURL
 ```bash
 curl -X 'GET' \
@@ -136,6 +141,11 @@ onst options = { chain: 'matic', address: '0x...' };
 const polygonNFTs = await Moralis.Web3API.account.getNFTs(options);
 ```
 
+#### REST
+```bash
+GET /{address}/nft
+```
+
 #### CURL
 ```bash
 curl -X 'GET' \
@@ -166,10 +176,11 @@ curl -X 'GET' \
 
 
 ### `GetNFTsForContract
-NFT API gets an object with the NFT count for the specified contract and an NFT array belonging to the given address for the specified contract (asynchronous).
+NFT API gets an object with the NFT count for the specified contract and an NFT array belonging to the given address for the specified contract.
 
 **Options**:
-- `address` *(required)*: Address of the contract.
+- `address` *(required)*: The owner of a given token (i.e. 0x1a2b3x...).
+- `token_address` *(required)*: Address of the contract.
 - `chain` *(optional)*: The blockchain to get data from. Valid values are listed on the intro page in the [`Supported Blockchains`](#supported-blockchains). Default value Eth.
 - `format` *(optional)*: The format of the token id. Available values : decimal, hex. Default value : decimal.
 - `offset` *(optional)*: offset.
@@ -181,32 +192,43 @@ const options = { chain: 'matic', address: '0x...', token_address: '0x...' };
 const polygonNFTs = await Moralis.Web3API.account.getNFTsForContract(options);
 ```
 
+#### REST
+```bash
+GET /{address}/nft/{token_address}
+```
+
 #### CURL
 ```bash
 curl -X 'GET' \
-  'https://deep-index.moralis.io/api/v2/nft/0xaddress?chain=eth&format=decimal' \
+  'https://deep-index.moralis.io/api/v2/{address}/nft/{token_address}?chain=eth&format=decimal' \
   -H 'accept: application/json'
   -H 'X-API-Key: YOUR_API_KEY'
 ```
 
 **Example return** (Object)
 ```json
-[
-  {
-    "token_address": "0x057Ec652A4F150f7FF94f089A38008f49a0DF88e",
-    "token_id": "15",
-    "contract_type": "ERC721",
-    "owner_of": "0x057Ec652A4F150f7FF94f089A38008f49a0DF88e",
-    "block_number": "88256",
-    "block_number_minted": "88256",
-    "token_uri": "string",
-    "metadata": "string",
-    "synced_at": "string",
-    "amount": "1",
-    "name": "CryptoKitties",
-    "symbol": "RARI"
-  }
-]
+{
+  "status": "SYNCING",
+  "total": 2000,
+  "page": 2,
+  "page_size": 100,
+  "result": [
+    {
+      "token_address": "0x057Ec652A4F150f7FF94f089A38008f49a0DF88e",
+      "token_id": "15",
+      "contract_type": "ERC721",
+      "owner_of": "0x057Ec652A4F150f7FF94f089A38008f49a0DF88e",
+      "block_number": "88256",
+      "block_number_minted": "88256",
+      "token_uri": "string",
+      "metadata": "string",
+      "synced_at": "string",
+      "amount": "1",
+      "name": "CryptoKitties",
+      "symbol": "RARI"
+    }
+  ]
+}
 ```
 
 
@@ -228,34 +250,55 @@ const options = { chain: "bsc", address: "0x...", limit: "10" };
 const transfersNFT = await Moralis.Web3API.account.getNFTTransfers(options);
 ```
 
+#### REST
+```bash
+GET /{address}/nft/transfers
+```
+
 #### CURL
 ```bash
 curl -X 'GET' \
-  'https://deep-index.moralis.io/api/v2/nft/0xaddress/transfers?chain=eth&format=decimal' \
+  'https://deep-index.moralis.io/api/v2/nft/{address}/transfers?chain=eth&format=decimal' \
   -H 'accept: application/json' \
   -H 'X-API-Key: YOUR_API_KEY'
 ```
 
 **Example return** (Object)
 ```json
-[
-  {
-    "address": "0x2d30ca6f024dbc1307ac8a1a44ca27de6f797ec22ef20627a1307243b0ab7d09",
-    "name": "Kylin Network",
-    "symbol": "KYL",
-    "decimals": "18",
-    "logo": "https://cdn.moralis.io/eth/0x67b6d479c7bb412c54e03dca8e1bc6740ce6b99c.png",
-    "logo_hash": "ee7aa2cdf100649a3521a082116258e862e6971261a39b5cd4e4354fcccbc54d",
-    "thumbnail": "https://cdn.moralis.io/eth/0x67b6d479c7bb412c54e03dca8e1bc6740ce6b99c_thumb.png",
-    "block_number": "string",
-    "validated": "string"
-  }
-]
+{
+  "total": 2000,
+  "page": 2,
+  "page_size": 100,
+  "result": [
+    {
+      "token_address": "0x057Ec652A4F150f7FF94f089A38008f49a0DF88e",
+      "token_id": "15",
+      "from_address": "0x057Ec652A4F150f7FF94f089A38008f49a0DF88e",
+      "to_address": "0x057Ec652A4F150f7FF94f089A38008f49a0DF88e",
+      "value": "1000000000000000",
+      "amount": "1",
+      "contract_type": "ERC721",
+      "block_number": "88256",
+      "block_timestamp": "2021-06-04T16:00:15",
+      "block_hash": "string",
+      "transaction_hash": "0x057Ec652A4F150f7FF94f089A38008f49a0DF88e",
+      "transaction_type": "string",
+      "transaction_index": "string",
+      "log_index": 0,
+      "operator": "0x057Ec652A4F150f7FF94f089A38008f49a0DF88e"
+    }
+  ],
+  "block_exists": true
+}
 ```
 
 
 ### `GetNFTTransfersByBlock`
+NFT API gets NFT transfers by block number or block hash
+
+
 **Options**:
+- `block_number_or_hash` *(required)*: The block hash or block number.
 - `chain` *(optional)*: The blockchain to get data from. Valid values are listed on the intro page in the [`Supported Blockchains`](#supported-blockchains). Default value Eth.
 - `format` *(optional)*: The format of the token id. Available values : decimal, hex. Default value : decimal.
 - `offset` *(optional)*: offset.
@@ -263,23 +306,58 @@ curl -X 'GET' \
 
 #### Moralis SDK
 ```js
+const options = { chain: "bsc", block_number_or_hash: "11284830" };
+const NFTTransfers = await Moralis.Web3API.native.getNFTTransfersByBlock(options);
+```
 
+#### REST
+```bash
+GET /block/{block_number_or_hash}/nft/transfers
 ```
 
 #### CURL
 ```bash
-
+curl -X 'GET' \
+  'https://deep-index.moralis.io/api/v2/block/{block_number_or_hash}/nft/transfers?chain=eth&limit=500' \
+  -H 'accept: application/json'
   -H 'X-API-Key: YOUR_API_KEY'
 ```
 
 **Example return** (Object)
 ```json
-
+{
+  "total": 2000,
+  "page": 2,
+  "page_size": 100,
+  "result": [
+    {
+      "token_address": "0x057Ec652A4F150f7FF94f089A38008f49a0DF88e",
+      "token_id": "15",
+      "from_address": "0x057Ec652A4F150f7FF94f089A38008f49a0DF88e",
+      "to_address": "0x057Ec652A4F150f7FF94f089A38008f49a0DF88e",
+      "value": "1000000000000000",
+      "amount": "1",
+      "contract_type": "ERC721",
+      "block_number": "88256",
+      "block_timestamp": "2021-06-04T16:00:15",
+      "block_hash": "string",
+      "transaction_hash": "0x057Ec652A4F150f7FF94f089A38008f49a0DF88e",
+      "transaction_type": "string",
+      "transaction_index": "string",
+      "log_index": 0,
+      "operator": "0x057Ec652A4F150f7FF94f089A38008f49a0DF88e"
+    }
+  ],
+  "block_exists": true
+}
 ```
 
 
 ### `GetAllTokenIds`
+NFT API gets an object with a number of NFTs and an array with NFT metadata(where available) for a given token contract address.
+
 **Options**:
+- `address` *(required)*: The address of the token contract.
 - `chain` *(optional)*: The blockchain to get data from. Valid values are listed on the intro page in the [`Supported Blockchains`](#supported-blockchains). Default value Eth.
 - `format` *(optional)*: The format of the token id. Available values : decimal, hex. Default value : decimal.
 - `offset` *(optional)*: offset.
@@ -287,18 +365,43 @@ curl -X 'GET' \
 
 #### Moralis SDK
 ```js
+const options = { address: "0xd...07", chain: "bsc" };
+const NFTs = await Moralis.Web3API.token.getAllTokenIds(options);
+```
 
+#### REST
+```bash
+GET /nft/{address}
 ```
 
 #### CURL
 ```bash
-
+curl -X 'GET' \
+  'https://deep-index.moralis.io/api/v2/nft/{address}?chain=eth&format=decimal' \
+  -H 'accept: application/json'
   -H 'X-API-Key: YOUR_API_KEY'
 ```
 
 **Example return** (Object)
 ```json
-
+{
+  "total": 2000,
+  "page": 2,
+  "page_size": 100,
+  "result": [
+    {
+      "token_address": "0x057Ec652A4F150f7FF94f089A38008f49a0DF88e",
+      "token_id": "15",
+      "contract_type": "ERC721",
+      "token_uri": "string",
+      "metadata": "string",
+      "synced_at": "string",
+      "amount": "1",
+      "name": "CryptoKitties",
+      "symbol": "RARI"
+    }
+  ]
+}
 ```
 
 
